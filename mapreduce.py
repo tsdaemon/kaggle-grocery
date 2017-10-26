@@ -70,7 +70,7 @@ def print_if_verbose(s, verbose):
 def map_reduce_df(csv_path, map_reduce_object, types=None, position=0, batch_size=10000000, cols=None, verbose=False):
     result = None
     if position != 0 and cols is None:
-        raise ValueError("You should either start from position 0 or specify cols.")
+        raise ValueError("You should either start from position 0 or specify columns.")
 
     while True:
         print_if_verbose('Reading batch from position {}, batch size {}...'.format(position, batch_size), verbose)
