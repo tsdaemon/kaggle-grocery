@@ -1,0 +1,1 @@
+check zeros. remove products with zeros.
