@@ -3,3 +3,4 @@ data/*
 submissions/*
 __pycache__/*
 .idea/*
+server/*
