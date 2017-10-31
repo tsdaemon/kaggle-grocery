@@ -49,6 +49,8 @@ def fill_lagged(df, df_prev, start_lagged, end_lagged):
         colname = 'unit_sales(t-{})'.format(start_lagged)
         df_prev[colname] = df_prev['unit_sales']
         df = df.merge(df_prev[['item_nbr', 'store_nbr', 'date', colname]], on=['item_nbr', 'store_nbr', 'date'], how='left')
+        del df_prev[colname]
+        gc.collect()
         df_prev.date += 1
         start_lagged += 1
         colnames.append(colname)
