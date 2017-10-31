@@ -7,3 +7,4 @@ matplotlib
 lightgbm
 xgboost
 telegram-send
+tables
