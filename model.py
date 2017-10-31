@@ -2,6 +2,7 @@ from date import *
 from mapreduce import *
 import numpy as np
 import gc
+from utils import print_if_verbose
 
 items_cols = ['class', 'perishable', 'family']
 stores_cols = ['city', 'type', 'cluster', 'state']
@@ -42,15 +43,17 @@ def convert_unit_sales(df):
     return df
 
 
-def fill_lagged(df, df_prev, start_lagged, end_lagged):
+def fill_lagged(df, df_prev, start_lagged, end_lagged, verbose=False):
     df_prev.date += start_lagged
     colnames = []
     while start_lagged <= end_lagged:
+        print_if_verbose("Processing lagged {}...".format(start_lagged), verbose)
         colname = 'unit_sales(t-{})'.format(start_lagged)
         df_prev[colname] = df_prev['unit_sales']
         df = df.merge(df_prev[['item_nbr', 'store_nbr', 'date', colname]], on=['item_nbr', 'store_nbr', 'date'], how='left')
         del df_prev[colname]
         gc.collect()
+        print_if_verbose("Lagged {} is done.".format(start_lagged), verbose)
         df_prev.date += 1
         start_lagged += 1
         colnames.append(colname)
@@ -74,7 +77,7 @@ def get_two_week_ranges(num, end_index):
 def fill_mean_encoding(df, df_prev, categorical_combinations):
     colnames = []
     for combination in categorical_combinations:
-        colname = 'mean_unit_sales_by_{}'.format('+'.join(combination))
+        colname = 'mean_unit_sales_by_({})'.format('+'.join(combination))
         mean_agg = df_prev.groupby(combination, as_index=False).agg({'unit_sales': 'mean'})
         mean_agg.rename(columns={'unit_sales': colname}, inplace=True)
         df = df.merge(mean_agg, on=combination, how='left')

@@ -1,4 +1,5 @@
 import pandas as pd
+from utils import print_if_verbose
 
 
 class MapReduceAbstract(object):
@@ -60,11 +61,6 @@ class ItemFamilyAggregationMapReduce(MapReduceAbstract):
         del df_reduce['unit_sales_x']
         del df_reduce['unit_sales_y']
         return df_reduce
-
-
-def print_if_verbose(s, verbose):
-    if verbose:
-        print(s)
 
 
 def map_reduce_df(csv_path, map_reduce_object, types=None, position=0, batch_size=10000000, cols=None, verbose=False):
