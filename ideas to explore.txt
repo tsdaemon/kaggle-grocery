@@ -1,1 +1,3 @@
-check zeros. remove products with zeros.
+1. check zeros. remove products with zeros.
+2. KNN
+3. Create separate model for unseen data without lagged.

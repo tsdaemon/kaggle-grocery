@@ -93,7 +93,7 @@ def fill_lagged(df, df_prev, start_lagged, end_lagged):
         start_lagged += 1
         colnames.append(colname)
 
-    return df
+    return df, colnames
 
 
 def get_two_week_ranges(num, end_index):
