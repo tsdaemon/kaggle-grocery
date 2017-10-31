@@ -58,7 +58,6 @@ def fill_lagged(df, df_prev, start_lagged, end_lagged, verbose=False):
         start_lagged += 1
         colnames.append(colname)
 
-    df.fillna(0.0, inplace=True)
     return df, colnames
 
 
@@ -74,7 +73,7 @@ def get_two_week_ranges(num, end_index):
     return ranges
 
 
-def fill_mean_encoding(df, df_prev, categorical_combinations):
+def fill_mean_encoding(df, df_prev, categorical_combinations, verbose=False):
     colnames = []
     for combination in categorical_combinations:
         colname = 'mean_unit_sales_by_({})'.format('+'.join(combination))
@@ -103,8 +102,6 @@ def add_mean_encoding(df, categorical_combinations):
             df_result = pd.concat([df_result, week2df])
         del week1df
         del week2df
-        gc.collect
-
-    df_result.fillna(0.0, inplace=True)
+        gc.collect()
 
     return df_result, colnames
