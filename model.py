@@ -1,6 +1,7 @@
 from date import *
 from mapreduce import *
 import numpy as np
+import gc
 
 items_cols = ['class', 'perishable', 'family']
 stores_cols = ['city', 'type', 'cluster', 'state']
@@ -84,17 +85,21 @@ def add_mean_encoding(df, categorical_combinations):
     # generating two weeks ranges
     ranges = get_two_week_ranges(8, get_date_index_parse('2017-08-15'))
 
-    result = []
+    df_result = None
     colnames = ['unit_sales_mean']
     # mean encoding
     for week2, week1 in reversed(ranges):
         week2df = df[df.date.isin(week2)]
         week1df = df[df.date.isin(week1)]
         week2df, colnames = fill_mean_encoding(week2df, week1df, categorical_combinations)
-        result.append(week2df)
+        if df_result is None:
+            df_result = week2df
+        else:
+            df_result = pd.concat([df_result, week2df])
         del week1df
+        del week2df
+        gc.collect
 
-    df_result = pd.concat(result)
     df_result.fillna(0.0, inplace=True)
 
     return df_result, colnames
