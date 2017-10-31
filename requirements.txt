@@ -6,3 +6,4 @@ pandas
 matplotlib
 lightgbm
 xgboost
+telegram-send
