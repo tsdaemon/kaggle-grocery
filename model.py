@@ -86,11 +86,13 @@ def get_one_week_ranges(num, end_index):
     return ranges
 
 
-def fill_mean_encoding(df, df_prev, categorical_combinations, verbose=False):
+def fill_mean_encoding(df, df_prev, categorical_combinations, verbose=False, prefix=None):
     colnames = []
     for combination in categorical_combinations:
         print_if_verbose("Adding encoding for {}...".format(combination), verbose)
         colname = 'mean_unit_sales_by_({})'.format('+'.join(combination))
+        if prefix is not None:
+            colname = prefix + colname
         mean_agg = df_prev.groupby(combination, as_index=False).agg({'unit_sales': 'mean'})
         mean_agg.rename(columns={'unit_sales': colname}, inplace=True)
         df = df.merge(mean_agg, on=combination, how='left')
@@ -99,7 +101,7 @@ def fill_mean_encoding(df, df_prev, categorical_combinations, verbose=False):
     return df, colnames
 
 
-def add_mean_encoding(df, categorical_combinations, ranges = None):
+def add_mean_encoding(df, categorical_combinations, ranges=None, prefix=None):
     # generating two weeks ranges
     if ranges is None:
         ranges = get_two_week_ranges(8, get_date_index_parse('2017-08-15'))
@@ -110,7 +112,7 @@ def add_mean_encoding(df, categorical_combinations, ranges = None):
     for week2, week1 in reversed(ranges):
         week2df = df[df.date.isin(week2)]
         week1df = df[df.date.isin(week1)]
-        week2df, colnames = fill_mean_encoding(week2df, week1df, categorical_combinations)
+        week2df, colnames = fill_mean_encoding(week2df, week1df, categorical_combinations, prefix)
         if df_result is None:
             df_result = week2df
         else:
