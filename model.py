@@ -110,7 +110,7 @@ def add_mean_encoding(df, categorical_combinations, ranges=None, prefix=None, ve
         week2df = df[df.date.isin(week2)]
         week1df = df[df.date.isin(week1)]
         week2df, colnames = fill_mean_encoding(week2df, week1df, categorical_combinations, prefix=prefix)
-        df = df.merge(week2df[colnames + ['id']], on='id', how='left')
+        df = df.merge(week2df[colnames + ['id']], on='id', how='left', copy=False)
         del week1df
         del week2df
         gc.collect()
