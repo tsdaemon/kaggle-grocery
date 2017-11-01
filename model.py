@@ -133,4 +133,12 @@ def add_mean_encoding(df, categorical_combinations, ranges=None, prefix=None, ve
         del week2df
         gc.collect()
 
-    return df_result[colnames+['id']], colnames
+    df_result = df_result[colnames+['id']]
+    gc.collect()
+    df.set_index('id', inplace=True)
+    df_result.set_index('id', inplace=True)
+    df = pd.concat([df, df_result])
+    df.reset_index(inplace=True)
+    gc.collect()
+
+    return df, colnames
