@@ -19,21 +19,54 @@ def extend_dataset(df, items, stores):
     df_ext = df_ext.merge(items, on='item_nbr')
     del df_ext['weight']
     df_ext = df_ext.merge(stores, on='store_nbr')
-
-    df_ext['date'] = df_ext['date'].astype('int16', copy=False)
-    df_ext['store_nbr'] = df_ext['store_nbr'].astype('int16', copy=False)
-    df_ext['item_nbr'] = df_ext['item_nbr'].astype('int32', copy=False)
-    df_ext['weekday'] = df_ext['weekday'].astype('int16', copy=False)
-    df_ext['family'] = df_ext['family'].astype('int16', copy=False)
-    df_ext['class'] = df_ext['class'].astype('int16', copy=False)
-    df_ext['perishable'] = df_ext['perishable'].astype('bool', copy=False)
-    df_ext['city'] = df_ext['city'].astype('int16', copy=False)
-    df_ext['state'] = df_ext['state'].astype('int16', copy=False)
-    df_ext['type'] = df_ext['type'].astype('int16', copy=False)
-    df_ext['cluster'] = df_ext['cluster'].astype('int16', copy=False)
-    gc.collect()
-
+    df_ext = optimize_df_types(df_ext)
     return df_ext, date_cols + items_cols + stores_cols
+
+
+def optimize_df_types(df):
+    if 'date' in df.columns:
+        df['date'] = df['date'].astype('int16', copy=False)
+
+    if 'onpromotion' in df.columns:
+        df['onpromotion'] = df['onpromotion'].astype('bool', copy=False)
+
+    if 'salary' in df.columns:
+        df['salary'] = df['salary'].astype('bool', copy=False)
+
+    if 'weekend' in df.columns:
+        df['weekend'] = df['weekend'].astype('bool', copy=False)
+
+    if 'perishable' in df.columns:
+        df['perishable'] = df['perishable'].astype('bool', copy=False)
+
+    if 'store_nbr' in df.columns:
+        df['store_nbr'] = df['store_nbr'].astype('int16', copy=False)
+
+    if 'item_nbr' in df.columns:
+        df['item_nbr'] = df['item_nbr'].astype('int32', copy=False)
+
+    if 'weekday' in df.columns:
+        df['weekday'] = df['weekday'].astype('int16', copy=False)
+
+    if 'family' in df.columns:
+        df['family'] = df['family'].astype('int16', copy=False)
+
+    if 'class' in df.columns:
+        df['class'] = df['class'].astype('int16', copy=False)
+
+    if 'city' in df.columns:
+        df['city'] = df['city'].astype('int16', copy=False)
+
+    if 'state' in df.columns:
+        df['state'] = df['state'].astype('int16', copy=False)
+
+    if 'type' in df.columns:
+        df['type'] = df['type'].astype('int16', copy=False)
+        
+    if 'cluster' in df.columns:
+        df['cluster'] = df['cluster'].astype('int16', copy=False)
+    gc.collect()
+    return df
 
 
 def fill_empty_sales(df):
