@@ -68,9 +68,21 @@ def get_two_week_ranges(num, end_index):
         week2end = end_index
         week2start = end_index-13
         week1end = end_index-14
-        week1start = end_index-35
+        week1start = end_index-27
         ranges.append((list(range(week2start, week2end+1)), list(range(week1start, week1end+1))))
         end_index -= 14
+    return ranges
+
+
+def get_one_week_ranges(num, end_index):
+    ranges = []
+    for i in range(num):
+        week2end = end_index
+        week2start = end_index-6
+        week1end = end_index-14
+        week1start = end_index-20
+        ranges.append((list(range(week2start, week2end+1)), list(range(week1start, week1end+1))))
+        end_index -= 7
     return ranges
 
 
@@ -87,9 +99,10 @@ def fill_mean_encoding(df, df_prev, categorical_combinations, verbose=False):
     return df, colnames
 
 
-def add_mean_encoding(df, categorical_combinations):
+def add_mean_encoding(df, categorical_combinations, ranges = None):
     # generating two weeks ranges
-    ranges = get_two_week_ranges(8, get_date_index_parse('2017-08-15'))
+    if ranges is None:
+        ranges = get_two_week_ranges(8, get_date_index_parse('2017-08-15'))
 
     df_result = None
     colnames = ['unit_sales_mean']
