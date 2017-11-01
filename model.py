@@ -32,7 +32,7 @@ def extend_dataset(df, items, stores):
     df_ext['type'] = df_ext['type'].astype('int16', copy=False)
     df_ext['cluster'] = df_ext['cluster'].astype('int16', copy=False)
     gc.collect()
-    
+
     return df_ext, date_cols + items_cols + stores_cols
 
 
@@ -54,7 +54,7 @@ def fill_empty_sales(df):
 
 def convert_unit_sales(df):
     df.ix[df.unit_sales < 0, 'unit_sales'] = 0
-    df_ext['unit_sales'] = np.log1p(df_ext['unit_sales'])
+    df['unit_sales'] = np.log1p(df['unit_sales'])
     return df
 
 
@@ -122,8 +122,8 @@ def add_mean_encoding(df, categorical_combinations, ranges=None, prefix=None, ve
     colnames = None
     for week2, week1 in reversed(ranges):
         print_if_verbose("Generating features for week {}.".format(week2), verbose)
-        week2df = df_ext[df.date.isin(week2)]
-        week1df = df_ext[df.date.isin(week1)]
+        week2df = df[df.date.isin(week2)]
+        week1df = df[df.date.isin(week1)]
         week2df, colnames = fill_mean_encoding(week2df, week1df, categorical_combinations, prefix=prefix)
         if df_result is None:
             df_result = week2df
