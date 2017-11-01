@@ -31,6 +31,7 @@ def extend_dataset(df, items, stores):
     df_ext['state'] = df_ext['state'].astype('int16', copy=False)
     df_ext['type'] = df_ext['type'].astype('int16', copy=False)
     df_ext['cluster'] = df_ext['cluster'].astype('int16', copy=False)
+    df_ext['id'] = df_ext['id'].astype('int64', copy=False)
     gc.collect()
 
     return df_ext, date_cols + items_cols + stores_cols
