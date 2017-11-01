@@ -104,19 +104,15 @@ def add_mean_encoding(df, categorical_combinations, ranges=None, prefix=None, ve
     if ranges is None:
         ranges = get_two_week_ranges(8, get_date_index_parse('2017-08-15'))
 
-    df_result = None
     colnames = None
     for week2, week1 in reversed(ranges):
         print_if_verbose("Generating features for week {}.".format(week2), verbose)
         week2df = df[df.date.isin(week2)]
         week1df = df[df.date.isin(week1)]
         week2df, colnames = fill_mean_encoding(week2df, week1df, categorical_combinations, prefix=prefix)
-        if df_result is None:
-            df_result = week2df
-        else:
-            df_result = pd.concat([df_result, week2df])
+        df = df.merge(week2df[colnames + ['id']], on='id', how='left')
         del week1df
         del week2df
         gc.collect()
 
-    return df_result, colnames
+    return df, colnames
